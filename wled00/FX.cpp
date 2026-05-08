@@ -4662,7 +4662,7 @@ void mode_sprite(void) {
   if (!strip.isMatrix || !SEGMENT.is2D()) FX_FALLBACK_STATIC;
   if (renderSpriteToSegment(SEGMENT) != 0) FX_FALLBACK_STATIC;
 }
-static const char _data_FX_MODE_SPRITE[] PROGMEM = "Sprite@Move speed,Instances,,,,Mask,Gradient;;!;2;sx=0,ix=0";
+static const char _data_FX_MODE_SPRITE[] PROGMEM = "Sprite@Move speed,Instances,,,,Mask,Gradient,Horizontal Gradient;;!;2;sx=0,ix=0";
 #endif
 
 /*

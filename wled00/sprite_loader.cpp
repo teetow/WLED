@@ -86,6 +86,7 @@ struct SpriteRenderContext {
   uint16_t instanceCount;
   bool useMask;
   bool useGradient;
+  bool useHorizontalGradient;
   bool moving;
   const SpriteInstance *instances;
 };
@@ -582,6 +583,7 @@ uint32_t buildRenderKey(const Segment &seg, const SpriteState &state, uint16_t m
   key ^= uint32_t(motionOffset) << 8;
   key ^= uint32_t(seg.check1) << 2;
   key ^= uint32_t(seg.check2) << 3;
+  key ^= uint32_t(seg.check3) << 4;
   key ^= uint32_t(seg.palette) << 16;
   key ^= rotl32(seg.colors[0], 5);
   key ^= rotl32(seg.colors[1], 13);
@@ -603,9 +605,18 @@ void updateAnimationFrame(SpriteState *state) {
   }
 }
 
-uint32_t getMaskColor(const SpriteRenderContext &context, int16_t destX) {
-  if (!context.useGradient || context.segmentWidth <= 1) return SEGCOLOR(0);
-  const uint8_t paletteIndex = map(destX, 0, context.segmentWidth - 1, 0, 255);
+uint32_t getMaskColor(const SpriteRenderContext &context, int16_t destX, int16_t destY) {
+  if (!context.useGradient) return SEGCOLOR(0);
+
+  uint8_t paletteIndex = 0;
+  if (context.useHorizontalGradient) {
+    if (context.segmentWidth <= 1) return SEGCOLOR(0);
+    paletteIndex = map(destX, 0, context.segmentWidth - 1, 0, 255);
+  } else {
+    if (context.segmentHeight <= 1) return SEGCOLOR(0);
+    paletteIndex = map(destY, 0, context.segmentHeight - 1, 0, 255);
+  }
+
   return context.segment->color_from_palette(paletteIndex, false, false, 0);
 }
 
@@ -613,7 +624,7 @@ void blendSpritePixel(const SpriteRenderContext &context, int16_t destX, int16_t
   if (alpha == 0) return;
   if ((unsigned)destX >= context.segmentWidth || (unsigned)destY >= context.segmentHeight) return;
 
-  const uint32_t outputColor = context.useMask ? getMaskColor(context, destX) : sourceColor;
+  const uint32_t outputColor = context.useMask ? getMaskColor(context, destX, destY) : sourceColor;
   context.segment->blendPixelColorXY(destX, destY, outputColor, alpha);
 }
 
@@ -687,6 +698,7 @@ byte drawSpriteFrame(Segment &seg, SpriteState &state, const SpriteFrame &frame)
     .instanceCount = state.instanceCount,
     .useMask = seg.check1,
     .useGradient = seg.check1 && seg.check2,
+    .useHorizontalGradient = seg.check3,
     .moving = seg.speed > 0 && state.maxWidth <= seg.vWidth(),
     .instances = getSpriteInstances(&state),
   };
