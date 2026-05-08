@@ -145,6 +145,13 @@ byte renderImageToSegment(Segment &seg);
 void endImagePlayback(Segment* seg);
 #endif
 
+//sprite_loader.cpp
+#ifdef ARDUINO_ARCH_ESP32
+byte renderSpriteToSegment(Segment &seg);
+void endSpritePlayback(Segment *seg);
+void addSpriteInfo(JsonObject root);
+#endif
+
 //improv.cpp
 enum ImprovRPCType {
   Command_Wifi = 0x01,

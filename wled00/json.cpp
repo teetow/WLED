@@ -861,6 +861,10 @@ void serializeInfo(JsonObject root)
   getTimeString(time);
   root[F("time")] = time;
 
+  #ifdef ARDUINO_ARCH_ESP32
+  addSpriteInfo(root);
+  #endif
+
   UsermodManager::addToJsonInfo(root);
 
   uint16_t os = 0;

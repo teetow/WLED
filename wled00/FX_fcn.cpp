@@ -563,6 +563,9 @@ Segment &Segment::setMode(uint8_t fx, bool loadDefaults) {
   if (fx >= strip.getModeCount()) fx = 0; // set solid mode
   // if we have a valid mode & is not reserved
   if (fx != mode) {
+    #ifdef ARDUINO_ARCH_ESP32
+    if (mode == FX_MODE_SPRITE && fx != FX_MODE_SPRITE) endSpritePlayback(this);
+    #endif
     startTransition(strip.getTransition(), true); // set effect transitions (must create segment copy)
     mode = fx;
     int sOpt;

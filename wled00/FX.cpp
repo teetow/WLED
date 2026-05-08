@@ -4653,6 +4653,18 @@ void mode_image(void) {
 }
 static const char _data_FX_MODE_IMAGE[] PROGMEM = "Image@!,Blur,;;;12;sx=128,ix=0";
 
+#ifdef ARDUINO_ARCH_ESP32
+/*
+  Sprite effect
+  Draws a centered PNG or cycles PNG frames described by an ANIMDEF JSON file.
+*/
+void mode_sprite(void) {
+  if (!strip.isMatrix || !SEGMENT.is2D()) FX_FALLBACK_STATIC;
+  if (renderSpriteToSegment(SEGMENT) != 0) FX_FALLBACK_STATIC;
+}
+static const char _data_FX_MODE_SPRITE[] PROGMEM = "Sprite@Move speed,Instances,,,,Mask,Gradient;;!;2;sx=0,ix=0";
+#endif
+
 /*
   Blends random colors across palette
   Modified, originally by Mark Kriegsman https://gist.github.com/kriegsman/1f7ccbbfa492a73c015e
@@ -11036,6 +11048,9 @@ void WS2812FX::setupEffectData() {
   addEffect(FX_MODE_RUNNING_DUAL, &mode_running_dual, _data_FX_MODE_RUNNING_DUAL);
   #ifdef WLED_ENABLE_GIF
   addEffect(FX_MODE_IMAGE, &mode_image, _data_FX_MODE_IMAGE);
+  #endif
+  #ifdef ARDUINO_ARCH_ESP32
+  addEffect(FX_MODE_SPRITE, &mode_sprite, _data_FX_MODE_SPRITE);
   #endif
   addEffect(FX_MODE_TRICOLOR_CHASE, &mode_tricolor_chase, _data_FX_MODE_TRICOLOR_CHASE);
   addEffect(FX_MODE_TRICOLOR_WIPE, &mode_tricolor_wipe, _data_FX_MODE_TRICOLOR_WIPE);
