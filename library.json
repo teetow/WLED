@@ -1,0 +1,9 @@
+{
+  "name": "wled-sprite-usermod",
+  "build": {
+    "libArchive": false
+  },
+  "dependencies": {
+    "bitbank2/PNGdec": "*"
+  }
+}
