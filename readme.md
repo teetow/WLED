@@ -53,12 +53,13 @@ custom_usermods =
 
 ## Publish by URL
 
-Once the repo is pushed to GitHub, others can use it directly:
+This usermod is published from the `teetow/WLED` fork as a dedicated branch whose
+root contains only the standalone usermod files. Others can consume it directly:
 
 ```ini
 custom_usermods =
   ${env:esp32dev.custom_usermods}
-  https://github.com/you/wled-sprite-usermod.git#main
+  https://github.com/teetow/WLED.git#wled-sprite-usermod
 ```
 
 ## Notes
