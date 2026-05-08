@@ -51,6 +51,17 @@ custom_usermods =
   file:///absolute/path/to/wled-sprite-usermod
 ```
 
+In this dev container, `platformio_override.ini` hangs during PlatformIO project
+processing. Use the included helper instead:
+
+```sh
+./build-local.sh /absolute/path/to/WLED esp32dev
+```
+
+That script copies the usermod into the target WLED checkout, generates a
+temporary `platformio.sprite.ini` that bypasses `platformio_override.ini`, and
+builds a derived environment named `esp32dev_sprite_um`.
+
 ## Publish by URL
 
 This usermod is published from the `teetow/WLED` fork as a dedicated branch whose
