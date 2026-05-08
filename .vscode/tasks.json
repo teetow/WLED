@@ -1,0 +1,57 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build WLED Sprite Usermod",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"${workspaceFolder}\\build-local.ps1",
+				"D:\\projects\\code\\!sandbox\\wled-sprite-build",
+				"esp32dev"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			}
+		},
+		{
+			"label": "Deploy WLED Sprite Usermod",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"${workspaceFolder}\\build-local.ps1",
+				"D:\\projects\\code\\!sandbox\\wled-sprite-build",
+				"esp32dev",
+				"-DeployHost",
+				"wled-32.lan",
+				"-SkipBuild"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build And Deploy WLED Sprite Usermod",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"Build WLED Sprite Usermod",
+				"Deploy WLED Sprite Usermod"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

@@ -58,9 +58,33 @@ processing. Use the included helper instead:
 ./build-local.sh /absolute/path/to/WLED esp32dev
 ```
 
-That script copies the usermod into the target WLED checkout, generates a
-temporary `platformio.sprite.ini` that bypasses `platformio_override.ini`, and
-builds a derived environment named `esp32dev_sprite_um`.
+On Windows, use the PowerShell helper for faster rebuilds:
+
+```powershell
+.\build-local.ps1 D:\path\to\WLED esp32dev
+```
+
+To build and deploy straight to the physical panel on the local network:
+
+```powershell
+.\build-local.ps1 D:\path\to\WLED esp32dev -DeployHost wled-32.lan
+```
+
+To deploy the already-built firmware without rebuilding first:
+
+```powershell
+.\build-local.ps1 D:\path\to\WLED esp32dev -DeployHost wled-32.lan -SkipBuild
+```
+
+Both helpers point `custom_usermods` directly at this repo via a local
+`symlink://...` entry, so edits are visible to the WLED checkout immediately
+without re-copying files. They generate a temporary `platformio.sprite.ini`
+that bypasses `platformio_override.ini` and build a derived environment named
+`esp32dev_sprite_um`. They also refresh the local `.pio-link` entry before each
+build so the usermod path stays in sync if you switch helper strategies or move
+the repo. The PowerShell helper can also POST the built firmware to WLED's
+native `/update` endpoint and wait for the panel to reboot with `sprite_um`
+available again.
 
 ## Publish by URL
 

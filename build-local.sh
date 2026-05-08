@@ -12,18 +12,14 @@ PIO_ENV=${2:-esp32dev}
 USERMOD_NAME=wled-sprite-usermod
 ALT_CONF=platformio.sprite.ini
 ALT_ENV=${PIO_ENV}_sprite_um
+USERMOD_PATH=$(python3 -c 'import pathlib, sys; print(pathlib.Path(sys.argv[1]).resolve())' "$USERMOD_DIR")
+USERMOD_SPEC="$USERMOD_NAME = symlink://$USERMOD_PATH"
+USERMOD_LINK="$WLED_DIR/.pio/libdeps/$ALT_ENV/$USERMOD_NAME.pio-link"
 
 if [[ ! -f "$WLED_DIR/platformio.ini" ]]; then
   echo "WLED checkout not found at: $WLED_DIR" >&2
   exit 1
 fi
-
-mkdir -p "$WLED_DIR/usermods/$USERMOD_NAME"
-rsync -a --delete \
-  --exclude .git \
-  --exclude .pio \
-  --exclude build_output \
-  "$USERMOD_DIR/" "$WLED_DIR/usermods/$USERMOD_NAME/"
 
 awk '
 BEGIN{skip=0}
@@ -38,8 +34,10 @@ skip==1 && /platformio_release\.ini/ {print; skip=0; next}
   printf 'extends = env:%s\n' "$PIO_ENV"
   printf 'custom_usermods =\n'
   printf '  ${env:%s.custom_usermods}\n' "$PIO_ENV"
-  printf '  %s\n' "$USERMOD_NAME"
+  printf '  %s\n' "$USERMOD_SPEC"
 } >> "$WLED_DIR/$ALT_CONF"
+
+rm -f "$USERMOD_LINK"
 
 cd "$WLED_DIR"
 python3 -m platformio run -c "$ALT_CONF" -e "$ALT_ENV"

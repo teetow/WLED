@@ -795,7 +795,7 @@ void resetSpriteRuntime(Segment &seg) {
   state->lastRenderKey = UINT32_MAX;
 }
 
-byte renderSpriteToSegment(Segment &seg) {
+byte renderUsermodSpriteToSegment(Segment &seg) {
   if (!seg.name) return SPRITE_ERROR_NO_NAME;
   if (!strip.isMatrix || !seg.is2D()) return SPRITE_ERROR_UNSUPPORTED;
 
@@ -843,7 +843,7 @@ void modeSpriteUsermod() {
     return;
   }
   if (SEGENV.call == 0) resetSpriteRuntime(SEGMENT);
-  if (renderSpriteToSegment(SEGMENT) != SPRITE_ERROR_NONE) SEGMENT.fill(SEGCOLOR(0));
+  if (renderUsermodSpriteToSegment(SEGMENT) != SPRITE_ERROR_NONE) SEGMENT.fill(SEGCOLOR(0));
 }
 
 } // namespace sprite_um
