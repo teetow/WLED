@@ -1377,7 +1377,7 @@ static uint8_t _burn      (uint8_t a, uint8_t b) { return ~_divide(a,~b); }
 static uint8_t _stencil   (uint8_t a, uint8_t b) { return a ? a : b; } // function unused
 static uint8_t _dummy     (uint8_t a, uint8_t b) { return a; } // dummy (same as _top) to fill the function list and make it safe from OOB access
 
-#define BLENDMODES  17 // number of blend modes must match "bm" in index.js, all cases must be handled in segblend() @ blendSegment()
+#define BLENDMODES  18 // number of blend modes must match "bm" in index.js, all cases must be handled in segblend() @ blendSegment()
 
 void WS2812FX::blendSegment(const Segment &topSegment) const {
   typedef uint8_t(*FuncType)(uint8_t, uint8_t);
@@ -1400,6 +1400,18 @@ void WS2812FX::blendSegment(const Segment &topSegment) const {
       case 2 : return color_add(t,b,true); // add with preserve color ratio to avoid color clipping
       case 6 : return RGBW32(_multiply(R(t),R(b)), _multiply(G(t),G(b)), _multiply(B(t),B(b)), _multiply(W(t),W(b))); // multiply (7% faster than lambda at 100bytes flash cost)
       case 16: return t ? t : b;           // stencil (use top layer if not black, else bottom)
+      case 17: {                            // alpha-over, using top W as alpha on RGB panels
+        const uint8_t alpha = W(t);
+        if (alpha == 0) return b;
+        if (alpha == 255) return RGBW32(R(t), G(t), B(t), W(b));
+        const uint8_t invAlpha = 255 - alpha;
+        return RGBW32(
+          (R(t) * alpha + R(b) * invAlpha) / 255,
+          (G(t) * alpha + G(b) * invAlpha) / 255,
+          (B(t) * alpha + B(b) * invAlpha) / 255,
+          W(b)
+        );
+      }
     }
     // default: use function pointer from array
     const auto func = funcs[blendMode];

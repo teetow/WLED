@@ -817,6 +817,7 @@ function populateSegments(s)
 							`<option value="14" ${inst.bm==14?' selected':''}>Dodge</option>`+
 							`<option value="15" ${inst.bm==15?' selected':''}>Burn</option>`+
 							`<option value="16" ${inst.bm==16?' selected':''}>Stencil</option>`+
+							`<option value="17" ${inst.bm==17?' selected':''}>Alpha Over</option>`+
 						`</select></div>`+
 					`</div>`;
 		let sndSim = `<div data-snd="si" class="lbl-s hide">Sound sim<br>`+
