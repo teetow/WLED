@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build: HTML and binary",
+      "label": "WLED: Build",
       "dependsOn": [
         "Build: HTML only",
         "Build: binary only"
@@ -14,7 +14,7 @@
     },
     {
       "type": "PlatformIO",
-      "label": "Build: binary only",
+      "label": "WLED: Build binary",
       "task": "Build",
       "group": {
         "kind": "build",
@@ -32,7 +32,7 @@
       "script": "build",
       "group": "build",
       "problemMatcher": [],
-      "label": "Build: HTML only",
+      "label": "WLED: Build HTML",
       "detail": "npm run build",
       "presentation": {
         "panel": "shared"
